@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Verifies that every reference solution (.meta/solution.go) passes its exercise's tests.
-# It copies the repo to a temp dir, swaps each exercise.go for its solution, and runs go test.
+# It copies the repo to a temp dir, swaps EVERY exercise.go for its solution first
+# (some exercises import others, e.g. concepts/packages), then runs go test per exercise.
 # Your own work in exercise.go is never touched.
 set -euo pipefail
 
@@ -11,23 +12,25 @@ trap 'rm -rf "$work"' EXIT
 rsync -a --exclude .git "$repo_root/" "$work/"
 cd "$work"
 
-found=0
-failed=0
+dirs=()
 while IFS= read -r solution; do
   dir="$(dirname "$(dirname "$solution")")"
   [[ "$dir" == ./_template* ]] && continue
-  found=$((found + 1))
   cp "$solution" "$dir/exercise.go"
-  if go test "./$dir/" >/tmp/verify-out.$$ 2>&1; then
+  dirs+=("$dir")
+done < <(find . -path '*/.meta/solution.go' | sort)
+
+failed=0
+for dir in "${dirs[@]}"; do
+  if out="$(go vet "./$dir/" 2>&1 && go test "./$dir/" 2>&1)"; then
     echo "PASS  $dir"
   else
     echo "FAIL  $dir"
-    sed 's/^/      /' /tmp/verify-out.$$
+    printf '%s\n' "$out" | sed 's/^/      /'
     failed=$((failed + 1))
   fi
-done < <(find . -path '*/.meta/solution.go' | sort)
-rm -f /tmp/verify-out.$$
+done
 
 echo
-echo "$((found - failed))/$found solutions passed"
+echo "$(( ${#dirs[@]} - failed ))/${#dirs[@]} solutions passed"
 [[ $failed -eq 0 ]]

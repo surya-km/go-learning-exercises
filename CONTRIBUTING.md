@@ -6,7 +6,7 @@ Anyone on the team can add an exercise. Keep each one **small** (one concept, 15
 
 1. Copy the template into the right section:
    ```sh
-   cp -R _template 03-types-interfaces/01-my-exercise
+   cp -R _template concepts/my-concept
    ```
 2. Rename the package in all `.go` files (`package template` → e.g. `package myexercise`).
    Package names are lowercase, with no dashes or underscores.
@@ -22,7 +22,7 @@ Anyone on the team can add an exercise. Keep each one **small** (one concept, 15
    ./scripts/verify-solutions.sh     # solution must pass
    go test ./path/to/exercise/       # stub should FAIL (otherwise the tests aren't testing anything)
    ```
-8. Add a row to the **Learning path** table in `README.md`.
+8. Add a row to the right section of the **Learning path** in `README.md`.
 
 ## Guidelines
 

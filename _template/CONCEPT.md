@@ -18,4 +18,4 @@ Implement in `exercise.go`:
 
 1. **`Example(input string) string`**: <what it should do, including edge cases>.
 
-Run: `go test -v ./<section>/<exercise>/`
+Run: `go test -v ./concepts/<concept>/`
