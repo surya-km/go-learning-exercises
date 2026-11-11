@@ -2,7 +2,7 @@
 
 A hands-on repo for learning Go as a team. It has **39 concepts**, named after the
 [Exercism Go track's concepts](https://github.com/exercism/go/tree/main/concepts). Each
-concept folder has 1–2 small coding problems.
+concept folder has small hands-on coding problems (usually 2).
 
 Every concept folder contains:
 
@@ -17,11 +17,72 @@ Every concept folder contains:
 **The tests are the teacher.** Each exercise starts with failing tests, and you're done
 when they all pass.
 
-## Setup
+## Getting started
 
-1. Install Go 1.25+ with `brew install go`, and check it with `go version`.
-2. Clone this repo and `cd` into it.
-3. (Recommended) Install the Go extension for VS Code, or use GoLand.
+### 1. Install what you need
+
+You only need **Git** and **Go 1.25 or newer**. Nothing else needs installing: the
+exercises only use Go's standard library, so there are no packages to download.
+
+**macOS** (using [Homebrew](https://brew.sh)):
+```sh
+brew install go git
+```
+
+**Linux:** download Go from [go.dev/dl](https://go.dev/dl/) and follow the
+[install steps](https://go.dev/doc/install). Install Git with your package manager, for
+example `sudo apt install git`.
+
+**Windows:** run the installer from [go.dev/dl](https://go.dev/dl/), and install Git from
+[git-scm.com](https://git-scm.com/download/win).
+
+Check that both work. Open a **new** terminal window first, so it picks up the new install:
+```sh
+go version    # should print go1.25 or newer
+git --version
+```
+
+### 2. Clone the repo
+
+```sh
+git clone https://github.com/REPLACE-WITH-ORG/go-learning-exercises.git
+cd go-learning-exercises
+```
+
+### 3. Check that everything works
+
+```sh
+go vet ./...
+```
+
+If this prints nothing, you're ready. You can also run `go test ./concepts/01-basics/`:
+it **should fail** at this point, because you haven't solved anything yet.
+
+### 4. Pick an editor (optional but recommended)
+
+Any editor works. These give you autocomplete and show errors as you type:
+
+- **VS Code** with the official [Go extension](https://marketplace.visualstudio.com/items?itemName=golang.go)
+- **GoLand**, or RubyMine / IntelliJ IDEA Ultimate with the Go plugin
+
+If your editor offers to install Go tools such as `gopls`, say yes.
+
+### 5. Keep your answers on your own branch
+
+The repo is shared, so don't push your solutions to `main`. That would fill in the
+exercises for everyone else. Create a personal branch before you start:
+
+```sh
+git switch -c practice/your-name
+```
+
+Commit your progress there as often as you like. To get new exercises when they're
+added to `main`:
+
+```sh
+git switch main && git pull
+git switch practice/your-name && git merge main
+```
 
 ## How to do an exercise
 
