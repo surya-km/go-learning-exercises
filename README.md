@@ -45,7 +45,7 @@ git --version
 ### 2. Clone the repo
 
 ```sh
-git clone https://github.com/REPLACE-WITH-ORG/go-learning-exercises.git
+git clone https://github.com/surya-km/go-learning-exercises.git
 cd go-learning-exercises
 ```
 
