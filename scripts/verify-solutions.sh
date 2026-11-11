@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Verifies that every reference solution (.meta/solution.go) passes its exercise's tests.
 # It copies the repo to a temp dir, swaps EVERY exercise.go for its solution first
-# (some exercises import others, e.g. concepts/packages), then runs go test per exercise.
+# (some exercises import others, e.g. concepts/37-packages), then runs go test per exercise.
 # Your own work in exercise.go is never touched.
 set -euo pipefail
 

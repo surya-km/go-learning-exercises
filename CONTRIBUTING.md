@@ -4,10 +4,13 @@ Anyone on the team can add an exercise. Keep each one **small** (one concept, 15
 
 ## Steps
 
-1. Copy the template into the right section:
+1. Copy the template into `concepts/`, numbered where it fits in the learning path:
    ```sh
-   cp -R _template concepts/my-concept
+   cp -R _template concepts/40-my-concept
    ```
+   To insert a concept in the middle, renumber the folders after it and update the
+   README links. Package names stay the same, so no Go code changes are needed (except
+   import paths in `37-packages`, if it moves).
 2. Rename the package in all `.go` files (`package template` → e.g. `package myexercise`).
    Package names are lowercase, with no dashes or underscores.
 3. Write `CONCEPT.md`: a plain-English explanation, short code examples, then a "Your task" section.

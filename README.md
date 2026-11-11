@@ -27,95 +27,95 @@ when they all pass.
 
 ```sh
 # 1. Read the concept
-cat concepts/basics/CONCEPT.md
+cat concepts/01-basics/CONCEPT.md
 
 # 2. Run the tests. They fail at first, which is expected.
-go test ./concepts/basics/
+go test ./concepts/01-basics/
 
-# 3. Edit concepts/basics/exercise.go until the tests pass
-go test -v ./concepts/basics/
+# 3. Edit concepts/01-basics/exercise.go until the tests pass
+go test -v ./concepts/01-basics/
 ```
 
-Tip: `go test -v -run TestSplitBill ./concepts/basics/` runs a single test.
+Tip: `go test -v -run TestSplitBill ./concepts/01-basics/` runs a single test.
 
 > Running `go test ./...` from the root shows failures for every exercise you haven't
 > solved yet. That's normal, so work on one folder at a time.
 
 ## Learning path
 
-The folders are listed alphabetically on disk, but they're meant to be done **in this
-order**. Later concepts build on earlier ones.
+The folders are numbered in learning order (`01-basics` → `39-randomness`), so work
+through them top to bottom. Later concepts build on earlier ones.
 
 ### 1. Foundations
 | # | Concept | What you build |
 |---|---|---|
-| 1 | [basics](concepts/basics) | `Greeting`, `SplitBill` |
-| 2 | [variables](concepts/variables) | `MonthEnd`, `Transfer` |
-| 3 | [comments](concepts/comments) | Doc comments, `FormatAmount`, `Describe` |
-| 4 | [constants](concepts/constants) | A `Frequency` enum with `iota`, `YearlyCostCents` |
-| 5 | [zero-values](concepts/zero-values) | `ApplyDefaults`, `AddSpend` |
+| 1 | [basics](concepts/01-basics) | `Greeting`, `SplitBill` |
+| 2 | [variables](concepts/02-variables) | `MonthEnd`, `Transfer` |
+| 3 | [comments](concepts/03-comments) | Doc comments, `FormatAmount`, `Describe` |
+| 4 | [constants](concepts/04-constants) | A `Frequency` enum with `iota`, `YearlyCostCents` |
+| 5 | [zero-values](concepts/05-zero-values) | `ApplyDefaults`, `AddSpend` |
 
 ### 2. Numbers and logic
 | # | Concept | What you build |
 |---|---|---|
-| 6 | [numbers](concepts/numbers) | `SplitBill` (fair split), `MakeChange` |
-| 7 | [arithmetic-operators](concepts/arithmetic-operators) | `TipCents`, `RoundUp` |
-| 8 | [floating-point-numbers](concepts/floating-point-numbers) | `ApplyRate`, `AlmostEqual` |
-| 9 | [type-conversion](concepts/type-conversion) | `AverageCents`, `OrderSummary` |
-| 10 | [booleans](concepts/booleans) | `CanWithdraw`, `NeedsReview` |
-| 11 | [comparison](concepts/comparison) | `CompareAmounts`, `EarlierDate` |
-| 12 | [conditionals-if](concepts/conditionals-if) | `OverdraftFee`, `BudgetStatus` |
-| 13 | [conditionals-switch](concepts/conditionals-switch) | `Category`, `CreditRating` |
+| 6 | [numbers](concepts/06-numbers) | `SplitBill` (fair split), `MakeChange` |
+| 7 | [arithmetic-operators](concepts/07-arithmetic-operators) | `TipCents`, `RoundUp` |
+| 8 | [floating-point-numbers](concepts/08-floating-point-numbers) | `ApplyRate`, `AlmostEqual` |
+| 9 | [type-conversion](concepts/09-type-conversion) | `AverageCents`, `OrderSummary` |
+| 10 | [booleans](concepts/10-booleans) | `CanWithdraw`, `NeedsReview` |
+| 11 | [comparison](concepts/11-comparison) | `CompareAmounts`, `EarlierDate` |
+| 12 | [conditionals-if](concepts/12-conditionals-if) | `OverdraftFee`, `BudgetStatus` |
+| 13 | [conditionals-switch](concepts/13-conditionals-switch) | `Category`, `CreditRating` |
 
 ### 3. Functions and loops
 | # | Concept | What you build |
 |---|---|---|
-| 14 | [functions](concepts/functions) | `Greeting`, `TipCents`, `TotalWithTip` |
-| 15 | [multiple-return-values](concepts/multiple-return-values) | `SplitBill`, `CoinChange` |
-| 16 | [for-loops](concepts/for-loops) | `MonthsToPayOff`, `CountWeekdays` |
-| 17 | [variadic-functions](concepts/variadic-functions) | `MaxAmount`, `AddToBill` |
+| 14 | [functions](concepts/14-functions) | `Greeting`, `TipCents`, `TotalWithTip` |
+| 15 | [multiple-return-values](concepts/15-multiple-return-values) | `SplitBill`, `CoinChange` |
+| 16 | [for-loops](concepts/16-for-loops) | `MonthsToPayOff`, `CountWeekdays` |
+| 17 | [variadic-functions](concepts/17-variadic-functions) | `MaxAmount`, `AddToBill` |
 
 ### 4. Collections
 | # | Concept | What you build |
 |---|---|---|
-| 18 | [slices](concepts/slices) | `Sum`, `Above`, `Pages` |
-| 19 | [maps](concepts/maps) | `TotalByCategory`, `OverBudget` |
-| 20 | [range-iteration](concepts/range-iteration) | `RunningBalance`, `InstallmentPlan`, `MaskCard`, `BiggestCategory` |
+| 18 | [slices](concepts/18-slices) | `Sum`, `Above`, `Pages` |
+| 19 | [maps](concepts/19-maps) | `TotalByCategory`, `OverBudget` |
+| 20 | [range-iteration](concepts/20-range-iteration) | `RunningBalance`, `InstallmentPlan`, `MaskCard`, `BiggestCategory` |
 
 ### 5. Text
 | # | Concept | What you build |
 |---|---|---|
-| 21 | [strings](concepts/strings) | `MaskAccount`, `ShortID` |
-| 22 | [runes](concepts/runes) | `Truncate`, `Initials` (handles é, € and emoji) |
-| 23 | [strings-package](concepts/strings-package) | `CleanMerchant`, `ParseTags` |
-| 24 | [strings-builder](concepts/strings-builder) | `Receipt`, `GroupDigits` |
-| 25 | [string-formatting](concepts/string-formatting) | `StatementLine`, `SpendingShare` |
-| 26 | [regular-expressions](concepts/regular-expressions) | `ValidRoutingNumber`, `ExtractAmounts` |
+| 21 | [strings](concepts/21-strings) | `MaskAccount`, `ShortID` |
+| 22 | [runes](concepts/22-runes) | `Truncate`, `Initials` (handles é, € and emoji) |
+| 23 | [strings-package](concepts/23-strings-package) | `CleanMerchant`, `ParseTags` |
+| 24 | [strings-builder](concepts/24-strings-builder) | `Receipt`, `GroupDigits` |
+| 25 | [string-formatting](concepts/25-string-formatting) | `StatementLine`, `SpendingShare` |
+| 26 | [regular-expressions](concepts/26-regular-expressions) | `ValidRoutingNumber`, `ExtractAmounts` |
 
 ### 6. Your own types
 | # | Concept | What you build |
 |---|---|---|
-| 27 | [structs](concepts/structs) | `NewAccount`, `Summarize` |
-| 28 | [type-definitions](concepts/type-definitions) | `Cents.Format`, `Cents.Split`, `YearlyCost` |
-| 29 | [methods](concepts/methods) | `Bill.IsDueBy`, `Bill.Label`, `Bills.TotalDueBy` |
-| 30 | [pointers](concepts/pointers) | `Account.Deposit`, `Account.Withdraw`, `Transfer` |
-| 31 | [stringers](concepts/stringers) | `String()` for `Money`, `Transaction`, `Statement` |
-| 32 | [interfaces](concepts/interfaces) | A `Payment` interface on 3 types, `MonthlyTotal`, `Biggest` |
-| 33 | [type-assertion](concepts/type-assertion) | `Describe` (type switch), `LookupString`, `LookupCents` |
+| 27 | [structs](concepts/27-structs) | `NewAccount`, `Summarize` |
+| 28 | [type-definitions](concepts/28-type-definitions) | `Cents.Format`, `Cents.Split`, `YearlyCost` |
+| 29 | [methods](concepts/29-methods) | `Bill.IsDueBy`, `Bill.Label`, `Bills.TotalDueBy` |
+| 30 | [pointers](concepts/30-pointers) | `Account.Deposit`, `Account.Withdraw`, `Transfer` |
+| 31 | [stringers](concepts/31-stringers) | `String()` for `Money`, `Transaction`, `Statement` |
+| 32 | [interfaces](concepts/32-interfaces) | A `Payment` interface on 3 types, `MonthlyTotal`, `Biggest` |
+| 33 | [type-assertion](concepts/33-type-assertion) | `Describe` (type switch), `LookupString`, `LookupCents` |
 
 ### 7. Errors
 | # | Concept | What you build |
 |---|---|---|
-| 34 | [errors](concepts/errors) | `ParseAmount` with sentinel errors |
-| 35 | [error-wrapping](concepts/error-wrapping) | `ProcessPayment`, `DeclineCode` (`errors.As`), `RootCause`, `ProcessBatch` (`errors.Join`) |
+| 34 | [errors](concepts/34-errors) | `ParseAmount` with sentinel errors |
+| 35 | [error-wrapping](concepts/35-error-wrapping) | `ProcessPayment`, `DeclineCode` (`errors.As`), `RootCause`, `ProcessBatch` (`errors.Join`) |
 
 ### 8. More tools
 | # | Concept | What you build |
 |---|---|---|
-| 36 | [first-class-functions](concepts/first-class-functions) | `Filter`, `SpendingTracker` (closure) |
-| 37 | [packages](concepts/packages) | A `money` sub-package, `ReceiptLine`, `Total` |
-| 38 | [time](concepts/time) | `DaysInMonth`, `NextDueDate` (month-end safe), `DaysBetween`, `FormatDue` |
-| 39 | [randomness](concepts/randomness) | `VerificationCode`, `ShuffledCopy` |
+| 36 | [first-class-functions](concepts/36-first-class-functions) | `Filter`, `SpendingTracker` (closure) |
+| 37 | [packages](concepts/37-packages) | A `money` sub-package, `ReceiptLine`, `Total` |
+| 38 | [time](concepts/38-time) | `DaysInMonth`, `NextDueDate` (month-end safe), `DaysBetween`, `FormatDue` |
+| 39 | [randomness](concepts/39-randomness) | `VerificationCode`, `ShuffledCopy` |
 
 ### Planned next
 - `concurrency`: goroutines, channels, `sync.WaitGroup`, `context`
