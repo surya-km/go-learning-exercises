@@ -1,0 +1,8 @@
+# Same checks as .github/workflows/ci.yml, for the GitLab copy of this repo.
+verify:
+  image: golang:1.25
+  script:
+    - go vet ./...
+    - test -z "$(gofmt -l .)"
+    - apt-get update -qq && apt-get install -y -qq rsync >/dev/null
+    - ./scripts/verify-solutions.sh
