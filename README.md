@@ -44,9 +44,18 @@ git --version
 
 ### 2. Clone the repo
 
+Copy the clone URL from the **Code** (or **Clone**) button at the top of this repo's page,
+then run:
+
+```sh
+git clone <clone-url>
+cd go-learning-exercises
+```
+
+For example, from the public copy:
+
 ```sh
 git clone https://github.com/surya-km/go-learning-exercises.git
-cd go-learning-exercises
 ```
 
 ### 3. Check that everything works
@@ -193,7 +202,8 @@ Maintainers can confirm that every reference solution passes its tests:
 ./scripts/verify-solutions.sh
 ```
 
-CI runs this on every push.
+CI runs this on every push: GitHub Actions uses `.github/workflows/ci.yml`, and GitLab CI
+uses `.gitlab-ci.yml`. Both run the same checks.
 
 ## More practice
 
