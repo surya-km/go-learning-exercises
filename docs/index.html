@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Go for Rubyists</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,750&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one readable column like a talk script; each idea = short version, analogy, Ruby/Go code side by side, one-line takeaway. */
+:root {
+  --bg: #f4f7f9;
+  --surface: #ffffff;
+  --fg: #13212b;
+  --muted: #566875;
+  --line: #d6e0e6;
+  --accent: #00708c;
+  --accent-soft: #e2f1f5;
+  --ruby: #a8323e;
+  --code-bg: #edf2f5;
+  --code-fg: #1b2b36;
+  --comment: #6b7d89;
+  --font-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
+  --font-body: "Source Sans 3", "Segoe UI", -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d151b; --surface: #141f27; --fg: #e3ecf1; --muted: #93a6b2; --line: #243440;
+    --accent: #4fc6e2; --accent-soft: #12303a; --ruby: #f0848d; --code-bg: #0a1116; --code-fg: #d7e3ea; --comment: #7f939f;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d151b; --surface: #141f27; --fg: #e3ecf1; --muted: #93a6b2; --line: #243440;
+  --accent: #4fc6e2; --accent-soft: #12303a; --ruby: #f0848d; --code-bg: #0a1116; --code-fg: #d7e3ea; --comment: #7f939f;
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 1.075rem;
+  line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 4rem;
+}
+.wrap { max-width: 880px; margin: 0 auto; display: flex; flex-direction: column; gap: 3.25rem; }
+
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; line-height: 1.15; margin: 0; }
+h1 { font-size: clamp(2.4rem, 7vw, 3.6rem); font-weight: 750; letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.6rem, 4vw, 2.1rem); font-weight: 750; letter-spacing: -0.01em; }
+h3 { font-size: 1.25rem; font-weight: 600; }
+p { margin: 0; max-width: 68ch; }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+code { font-family: var(--font-mono); font-size: 0.88em; background: var(--code-bg); padding: 0.1em 0.35em; border-radius: 4px; }
+
+.eyebrow { font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+
+/* Hero */
+header.hero { padding-top: 3.5rem; display: flex; flex-direction: column; gap: 1.1rem; }
+.hero .lede { font-size: 1.25rem; color: var(--muted); max-width: 60ch; }
+.hero .lede strong { color: var(--fg); }
+.agenda { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0; margin: 0.6rem 0 0; list-style: none; }
+.agenda a {
+  display: inline-block; text-decoration: none; color: var(--fg);
+  border: 1px solid var(--line); background: var(--surface);
+  padding: 0.3rem 0.75rem; border-radius: 999px; font-size: 0.95rem;
+}
+.agenda a:hover { border-color: var(--accent); color: var(--accent); }
+.agenda .n { font-family: var(--font-mono); color: var(--muted); font-size: 0.8em; margin-right: 0.35em; }
+
+section { display: flex; flex-direction: column; gap: 1.25rem; scroll-margin-top: 1.5rem; }
+.section-head { display: flex; flex-direction: column; gap: 0.4rem; border-top: 1px solid var(--line); padding-top: 1.75rem; }
+
+/* The three building blocks of every idea */
+.short { display: grid; grid-template-columns: auto 1fr; gap: 0.3rem 0.75rem; align-items: baseline; }
+.short .who { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; }
+.short .who.r { color: var(--ruby); }
+.short .who.g { color: var(--accent); }
+.short p { min-width: 0; }
+.analogy { color: var(--muted); }
+.analogy b { color: var(--fg); font-weight: 600; }
+.oneline { background: var(--accent-soft); border-radius: 8px; padding: 0.6rem 0.9rem; font-weight: 600; max-width: none; }
+.oneline::before { content: "In one line: "; color: var(--accent); }
+
+/* Fact boxes */
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1rem; }
+.fact { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
+.fact .k { font-weight: 700; }
+.fact .v { color: var(--muted); font-size: 0.98rem; }
+
+/* Fundamentals */
+.fundamental { display: flex; flex-direction: column; gap: 0.85rem; }
+.fundamental + .fundamental { padding-top: 1.75rem; border-top: 1px dashed var(--line); }
+.fundamental h3 .idx { font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent); margin-right: 0.5rem; font-weight: 600; }
+
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+@media (max-width: 720px) { .compare { grid-template-columns: 1fr; } }
+.pane { min-width: 0; border: 1px solid var(--line); border-radius: 10px; background: var(--code-bg); overflow: hidden; display: flex; flex-direction: column; }
+.pane .lang { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; padding: 0.5rem 0.9rem; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 0.45rem; background: var(--surface); }
+.pane .lang::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.pane.ruby .lang { color: var(--ruby); }
+.pane.go .lang { color: var(--accent); }
+pre { margin: 0; padding: 0.9rem; overflow-x: auto; font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.55; color: var(--code-fg); flex: 1; }
+pre .c { color: var(--comment); font-style: italic; }
+pre .e { color: var(--ruby); font-weight: 600; }
+
+/* Tables */
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 0.98rem; }
+th, td { text-align: left; padding: 0.65rem 0.9rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+th { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--code-bg); }
+td:first-child { font-weight: 600; }
+td code { white-space: nowrap; }
+.cheat td:first-child { font-weight: 400; }
+
+/* Two cards */
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 720px) { .two { grid-template-columns: 1fr; } }
+.list-card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1.1rem 1.25rem; min-width: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+.list-card ul { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.4rem; }
+
+/* Hands-on steps */
+ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: step; display: flex; flex-direction: column; gap: 0.9rem; }
+ol.steps > li { counter-increment: step; display: grid; grid-template-columns: 2.2rem 1fr; gap: 0.75rem; align-items: start; }
+ol.steps > li::before { content: counter(step); font-family: var(--font-display); font-weight: 750; font-size: 1.1rem; width: 2.2rem; height: 2.2rem; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--accent); color: var(--accent); }
+ol.steps > li > div { min-width: 0; display: flex; flex-direction: column; gap: 0.4rem; padding-top: 0.2rem; }
+ol.steps pre { background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; flex: none; }
+
+.errors { display: flex; flex-direction: column; gap: 0.75rem; }
+.err { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0.75rem; align-items: start; }
+@media (max-width: 720px) { .err { grid-template-columns: 1fr; } }
+.err pre { background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; flex: none; }
+.err p { font-size: 0.98rem; padding-top: 0.6rem; }
+
+footer { color: var(--muted); font-size: 0.92rem; border-top: 1px solid var(--line); padding-top: 1.25rem; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header class="hero">
+  <span class="eyebrow">Team session · Intro before hands-on</span>
+  <h1>Go for Rubyists</h1>
+  <p class="lede">What Go is, why we're learning it, and the ideas that make it different from Ruby. <strong>Each idea is short: the gist, an everyday example, and a bit of code.</strong></p>
+  <ul class="agenda" aria-label="Agenda">
+    <li><a href="#what"><span class="n">1</span>What is Go</a></li>
+    <li><a href="#why"><span class="n">2</span>Why Go</a></li>
+    <li><a href="#mindset"><span class="n">3</span>The big difference</a></li>
+    <li><a href="#fundamentals"><span class="n">4</span>8 fundamentals</a></li>
+    <li><a href="#compare"><span class="n">5</span>Go vs Ruby</a></li>
+    <li><a href="#cheatsheet"><span class="n">6</span>Cheat sheet</a></li>
+    <li><a href="#handson"><span class="n">7</span>Hands-on</a></li>
+  </ul>
+</header>
+
+<section id="what">
+  <div class="section-head">
+    <span class="eyebrow">1 · What is Go</span>
+    <h2>A simple, fast language made by Google</h2>
+  </div>
+  <p>Go (or Golang) came out of Google in 2009. It was built to be <strong>easy to read, quick to build and fast to run</strong>. It has few features on purpose, so there's usually one obvious way to do something.</p>
+  <div class="facts">
+    <div class="fact"><span class="k">Compiled</span><span class="v">Turned into a ready-to-run file before it runs.</span></div>
+    <div class="fact"><span class="k">Statically typed</span><span class="v">Every variable has a fixed type, checked before running.</span></div>
+    <div class="fact"><span class="k">Garbage collected</span><span class="v">Cleans up unused memory for you, like Ruby.</span></div>
+    <div class="fact"><span class="k">Goroutines</span><span class="v">Doing many things at once is easy and cheap.</span></div>
+    <div class="fact"><span class="k">Trusted</span><span class="v">Docker, Kubernetes and Terraform are written in Go.</span></div>
+  </div>
+  <p class="oneline">Go is a small, strict, fast language that big infrastructure tools rely on.</p>
+</section>
+
+<section id="why">
+  <div class="section-head">
+    <span class="eyebrow">2 · Why Go</span>
+    <h2>Why it's worth learning</h2>
+  </div>
+  <div class="two">
+    <div class="list-card">
+      <h3>For our services</h3>
+      <ul>
+        <li><strong>Fast:</strong> often several times faster than Ruby for heavy work.</li>
+        <li><strong>Cheaper:</strong> uses much less memory, so fewer servers.</li>
+        <li><strong>Many things at once</strong> is built in.</li>
+        <li><strong>Easy deploys:</strong> copy one file and run it.</li>
+      </ul>
+    </div>
+    <div class="list-card">
+      <h3>For us</h3>
+      <ul>
+        <li><strong>Fewer production surprises:</strong> many bugs are caught early.</li>
+        <li><strong>Easy to read</strong> anyone's code: one style for everyone.</li>
+        <li><strong>Small language:</strong> learn most of it in a few weeks.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="oneline">Ruby is great for building quickly; Go is great when speed, cost and scale matter.</p>
+</section>
+
+<section id="mindset">
+  <div class="section-head">
+    <span class="eyebrow">3 · The big difference</span>
+    <h2>Interpreted vs compiled</h2>
+  </div>
+  <div class="short">
+    <span class="who r">Ruby</span><p><strong>Interpreted:</strong> read and run line by line, every time it runs.</p>
+    <span class="who g">Go</span><p><strong>Compiled:</strong> translated once, in advance, into one ready-to-run file.</p>
+  </div>
+  <p class="analogy"><b>Think of a kitchen.</b> Ruby reads the recipe while it cooks, so you need the cook and the recipe in every kitchen. Go cooks the meal in advance and hands you a packed box. You can serve it instantly and carry it anywhere.</p>
+  <div class="compare">
+    <div class="pane ruby"><span class="lang">Ruby</span><pre>ruby app.rb   <span class="c"># Ruby must be installed to run this</span></pre></div>
+    <div class="pane go"><span class="lang">Go</span><pre>go build -o app   <span class="c">// make the packed box once</span>
+./app             <span class="c">// run it, no Go needed</span></pre></div>
+  </div>
+  <p class="oneline">Ruby translates while running; Go translates once and gives you a finished program.</p>
+</section>
+
+<section id="fundamentals">
+  <div class="section-head">
+    <span class="eyebrow">4 · Fundamentals</span>
+    <h2>8 ideas that make Go, Go</h2>
+    <p>These are also the topics in our practice repo.</p>
+  </div>
+
+  <div class="fundamental">
+    <h3><span class="idx">4.1</span>Types are fixed</h3>
+    <div class="short">
+      <span class="who r">Ruby</span><p>A variable can hold anything, and change later.</p>
+      <span class="who g">Go</span><p>A variable has one type forever, checked before running.</p>
+    </div>
+    <p class="analogy"><b>Think of labelled jars.</b> A jar labelled "sugar" can't hold salt. Ruby lets you swap and you find out when you taste the cake. Go stops you before you start baking.</p>
+    <div class="compare">
+      <div class="pane ruby"><span class="lang">Ruby</span><pre>age = 30
+age = "thirty"   <span class="c"># allowed</span></pre></div>
+      <div class="pane go"><span class="lang">Go</span><pre>age := 30
+age = "thirty"   <span class="c">// won't build</span></pre></div>
+    </div>
+    <p class="oneline">Go catches type mix-ups before the program runs.</p>
+  </div>
+
+  <div class="fundamental">
+    <h3><span class="idx">4.2</span>One file you can run anywhere</h3>
+    <div class="short">
+      <span class="who r">Ruby</span><p>Every server needs Ruby and your gems installed.</p>
+      <span class="who g">Go</span><p>You build one file. The server just runs it.</p>
+    </div>
+    <p class="analogy"><b>Think of moving house.</b> Ruby is shipping the furniture as flat-pack plus the tools to build it. Go is shipping it already built.</p>
+    <div class="compare">
+      <div class="pane ruby"><span class="lang">Ruby</span><pre>bundle install
+ruby app.rb</pre></div>
+      <div class="pane go"><span class="lang">Go</span><pre>go build -o app
+./app</pre></div>
+    </div>
+    <p class="oneline">Build once, copy one file, run it anywhere.</p>
+  </div>
+
+  <div class="fundamental">
+    <h3><span class="idx">4.3</span>Functions can return two values</h3>
+    <div class="short">
+      <span class="who r">Ruby</span><p>Returns <strong>one</strong> array, like <code>[333, 1]</code>, then unpacks it.</p>
+      <span class="who g">Go</span><p>Really returns <strong>two separate</strong> values: <code>333</code> and <code>1</code>.</p>
+    </div>
+    <p class="analogy"><b>Think of a shop.</b> Ruby hands you one bag with two items inside. Go hands you the two items, one in each hand.</p>
+    <div class="compare">
+      <div class="pane ruby"><span class="lang">Ruby</span><pre>def split(total, people)
+  [total / people, total % people]
+end
+each, left = split(1000, 3)</pre></div>
+      <div class="pane go"><span class="lang">Go</span><pre>func Split(total, people int) (int, int) {
+    return total / people, total % people
+}
+each, left := Split(1000, 3)  <span class="c">// 333, 1</span></pre></div>
+    </div>
+    <p class="oneline">Ruby packs values into an array; Go returns separate values and you must take both.</p>
+  </div>
+
+  <div class="fundamental">
+    <h3><span class="idx">4.4</span>Errors are returned, not thrown</h3>
+    <div class="short">
+      <span class="who r">Ruby</span><p>Stops and shouts (<code>raise</code>). Someone else must catch it (<code>rescue</code>).</p>
+      <span class="who g">Go</span><p>Quietly hands you a note: "this went wrong". You read it on the next line.</p>
+    </div>
+    <p class="analogy"><b>Think of a restaurant.</b> In Ruby, if the dish is sold out, a waiter runs out shouting and hopes someone deals with it. In Go, the waiter always brings two things: your food and a note. Blank note means all good. You check the note before you eat.</p>
+    <div class="compare">
+      <div class="pane ruby"><span class="lang">Ruby</span><pre>begin
+  amount = Integer("12a")
+rescue ArgumentError =&gt; e
+  puts "bad amount"
+end</pre></div>
+      <div class="pane go"><span class="lang">Go</span><pre>amount, err := strconv.Atoi("12a")
+if err != nil {      <span class="c">// is there a problem note?</span>
+    fmt.Println("bad amount")
+    return
+}</pre></div>
+    </div>
+    <p class="oneline">Ruby throws problems; Go returns them, and you check <code>if err != nil</code> right away.</p>
+  </div>
+
+  <div class="fundamental">
+    <h3><span class="idx">4.5</span>Structs instead of classes</h3>
+    <div class="short">
+      <span class="who r">Ruby</span><p>Classes, with inheritance (a class can extend another).</p>
+      <span class="who g">Go</span><p>Structs: a set of fields, with methods attached. No inheritance.</p>
+    </div>
+    <p class="analogy"><b>Think of a paper form.</b> A struct is a form with fixed boxes, like Owner and Balance. Methods are the actions you can do with that form, like Deposit.</p>
+    <div class="compare">
+      <div class="pane ruby"><span class="lang">Ruby</span><pre>class Account
+  attr_accessor :owner, :balance
+end</pre></div>
+      <div class="pane go"><span class="lang">Go</span><pre>type Account struct {
+    Owner   string
+    Balance int
+}</pre></div>
+    </div>
+    <p class="analogy"><b>Two small rules:</b> a <strong>Capital</strong> name is public, a lowercase one is private. And <code>*Account</code> means "change the real account, not a photocopy".</p>
+    <p class="oneline">A struct is a form with fixed fields; methods are what you can do with it.</p>
+  </div>
+
+  <div class="fundamental">
+    <h3><span class="idx">4.6</span>Interfaces</h3>
+    <div class="short">
+      <span class="who r">Ruby</span><p>"If it quacks like a duck, it's a duck." Checked when the code runs.</p>
+      <span class="who g">Go</span><p>Same idea, but checked <strong>before</strong> running.</p>
+    </div>
+    <p class="analogy"><b>Think of a job ad</b> that says "must be able to drive". Anyone who can drive qualifies, with no special certificate. Go checks that every applicant really can drive before the work starts.</p>
+    <div class="compare">
+      <div class="pane ruby"><span class="lang">Ruby</span><pre><span class="c"># anything with monthly_cents works</span>
+bills.sum(&amp;:monthly_cents)</pre></div>
+      <div class="pane go"><span class="lang">Go</span><pre>type Bill interface {
+    MonthlyCents() int   <span class="c">// "must be able to do this"</span>
+}</pre></div>
+    </div>
+    <p class="oneline">An interface is a list of skills; any type with those skills fits.</p>
+  </div>
+
+  <div class="fundamental">
+    <h3><span class="idx">4.7</span>Doing many things at once</h3>
+    <div class="short">
+      <span class="who r">Ruby</span><p>Mostly one thing at a time. We add tools like Sidekiq for more.</p>
+      <span class="who g">Go</span><p>Put <code>go</code> in front of a call and it runs alongside everything else.</p>
+    </div>
+    <p class="analogy"><b>Think of waiters.</b> One waiter serves tables one by one. Go gives you as many waiters as you need, and they're cheap. Each one is called a <strong>goroutine</strong>.</p>
+    <div class="compare">
+      <div class="pane ruby"><span class="lang">Ruby</span><pre>send_email(user1)   <span class="c"># waits...</span>
+send_email(user2)   <span class="c"># ...then this</span></pre></div>
+      <div class="pane go"><span class="lang">Go</span><pre>go sendEmail(user1)   <span class="c">// starts now</span>
+go sendEmail(user2)   <span class="c">// also starts now</span></pre></div>
+    </div>
+    <p class="oneline">The word <code>go</code> starts work in the background; thousands at once is normal.</p>
+  </div>
+
+  <div class="fundamental">
+    <h3><span class="idx">4.8</span>The tools come in the box</h3>
+    <div class="short">
+      <span class="who r">Ruby</span><p>Add gems for formatting, testing and more.</p>
+      <span class="who g">Go</span><p>Formatting, testing and checking come with the language.</p>
+    </div>
+    <p class="analogy"><b>Think of buying a phone.</b> With Ruby, you buy the charger and case separately. With Go, they're in the box.</p>
+    <div class="compare">
+      <div class="pane ruby"><span class="lang">Ruby</span><pre>rubocop -a
+rspec</pre></div>
+      <div class="pane go"><span class="lang">Go</span><pre>go fmt ./...    <span class="c">// tidy the code</span>
+go test ./...   <span class="c">// run the tests</span></pre></div>
+    </div>
+    <p class="oneline">Every Go project uses the same built-in commands.</p>
+  </div>
+</section>
+
+<section id="compare">
+  <div class="section-head">
+    <span class="eyebrow">5 · Go vs Ruby</span>
+    <h2>Side by side</h2>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Topic</th><th>Ruby</th><th>Go</th></tr></thead>
+      <tbody>
+        <tr><td>Runs by</td><td>Reading code while running</td><td>A pre-built program file</td></tr>
+        <tr><td>Speed</td><td>Fine for most apps</td><td>Much faster for heavy work</td></tr>
+        <tr><td>Memory</td><td>Higher</td><td>Much lower</td></tr>
+        <tr><td>Bugs found</td><td>Mostly while running</td><td>Many before running</td></tr>
+        <tr><td>Many things at once</td><td>Limited, extra tools</td><td>Built in</td></tr>
+        <tr><td>Deploy</td><td>Ruby + gems on the server</td><td>Copy one file</td></tr>
+        <tr><td>Code style</td><td>Many ways</td><td>One way</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="two">
+    <div class="list-card">
+      <h3>Ruby is still better for</h3>
+      <ul>
+        <li>Quick prototypes and Rails apps.</li>
+        <li>Short code: <code>users.map(&amp;:email)</code> is one line.</li>
+        <li>"Magic" like DSLs and metaprogramming.</li>
+      </ul>
+    </div>
+    <div class="list-card">
+      <h3>What feels odd at first in Go</h3>
+      <ul>
+        <li>Writing <code>if err != nil</code> a lot.</li>
+        <li>Unused variables or imports are errors.</li>
+        <li>No <code>map</code> or <code>select</code>: you write a loop.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="oneline">Go doesn't replace Ruby; it's the better tool when speed, memory or scale matter.</p>
+</section>
+
+<section id="cheatsheet">
+  <div class="section-head">
+    <span class="eyebrow">6 · Cheat sheet</span>
+    <h2>"I know how to do this in Ruby..."</h2>
+  </div>
+  <div class="table-wrap">
+    <table class="cheat">
+      <thead><tr><th>Ruby</th><th>Go</th></tr></thead>
+      <tbody>
+        <tr><td><code>puts "hi"</code></td><td><code>fmt.Println("hi")</code></td></tr>
+        <tr><td><code>"Hi #{name}"</code></td><td><code>fmt.Sprintf("Hi %s", name)</code></td></tr>
+        <tr><td><code>x = 5</code></td><td><code>x := 5</code> (new) · <code>x = 6</code> (change)</td></tr>
+        <tr><td><code>[1, 2, 3]</code></td><td><code>[]int{1, 2, 3}</code></td></tr>
+        <tr><td><code>{"food" =&gt; 500}</code></td><td><code>map[string]int{"food": 500}</code></td></tr>
+        <tr><td><code>list.each { |x| ... }</code></td><td><code>for _, x := range list { ... }</code></td></tr>
+        <tr><td><code>class Account</code></td><td><code>type Account struct { ... }</code></td></tr>
+        <tr><td><code>raise</code> / <code>rescue</code></td><td><code>return err</code> / <code>if err != nil</code></td></tr>
+        <tr><td><code>require "json"</code></td><td><code>import "encoding/json"</code></td></tr>
+        <tr><td><code>Gemfile</code></td><td><code>go.mod</code></td></tr>
+        <tr><td><code>private</code></td><td>lowercase first letter</td></tr>
+        <tr><td><code>rspec</code> / <code>rubocop</code></td><td><code>go test</code> / <code>go fmt</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="handson">
+  <div class="section-head">
+    <span class="eyebrow">7 · Hands-on</span>
+    <h2>Let's write some Go</h2>
+    <p>Each folder in the repo has a short lesson (<code>CONCEPT.md</code>), the code you edit (<code>exercise.go</code>) and tests. <strong>The tests fail at first. You're done when they pass.</strong></p>
+  </div>
+  <ol class="steps">
+    <li><div>
+      <h3>Check Go is installed</h3>
+      <pre>go version   # go1.25 or newer</pre>
+    </div></li>
+    <li><div>
+      <h3>Clone the repo and make your branch</h3>
+      <pre>git clone https://github.com/surya-km/go-learning-exercises.git
+cd go-learning-exercises
+git switch -c practice/your-name</pre>
+    </div></li>
+    <li><div>
+      <h3>Run the first exercise's tests</h3>
+      <pre>go test -v ./concepts/01-basics/   # fails at first, that's expected</pre>
+    </div></li>
+    <li><div>
+      <h3>Edit <code>exercise.go</code> until the tests pass</h3>
+      <p>Save, run the tests, repeat. When the last line says <code>ok</code>, move to <code>02-variables</code>.</p>
+    </div></li>
+  </ol>
+
+  <h3>Three errors you'll probably see today</h3>
+  <div class="errors">
+    <div class="err">
+      <pre><span class="e">undefined: fmt</span></pre>
+      <p>Add <code>import "fmt"</code> under the <code>package</code> line.</p>
+    </div>
+    <div class="err">
+      <pre><span class="e">declared and not used: x</span></pre>
+      <p>Go doesn't allow unused variables or imports. Use them or delete them.</p>
+    </div>
+    <div class="err">
+      <pre><span class="e">"./...." matched no packages</span></pre>
+      <p>Too many dots. It's exactly three: <code>./...</code></p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  More practice: <a href="https://go.dev/tour/" target="_blank" rel="noopener">A Tour of Go</a> ·
+  <a href="https://gobyexample.com/" target="_blank" rel="noopener">Go by Example</a> ·
+  <a href="https://exercism.org/tracks/go" target="_blank" rel="noopener">Exercism Go track</a>
+</footer>
+
+</div>
+</body>
+</html>

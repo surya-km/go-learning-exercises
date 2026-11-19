@@ -4,6 +4,10 @@ A hands-on repo for learning Go as a team. It has **39 concepts**, named after t
 [Exercism Go track's concepts](https://github.com/exercism/go/tree/main/concepts). Each
 concept folder has small hands-on coding problems (usually 2).
 
+**New to Go, coming from Ruby?** Start with the short intro page:
+[Go for Rubyists](https://surya-km.github.io/go-learning-exercises/). It explains what
+Go is and how it differs from Ruby, with everyday examples. (Source: `docs/index.html`.)
+
 Every concept folder contains:
 
 | File | What it is |
