@@ -3,3 +3,7 @@
 .vscode/
 *.test
 *.out
+
+# Programs built in demo/hello
+demo/hello/hello
+demo/hello/hello-*

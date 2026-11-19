@@ -111,6 +111,19 @@ Tip: `go test -v -run TestSplitBill ./concepts/01-basics/` runs a single test.
 > Running `go test ./...` from the root shows failures for every exercise you haven't
 > solved yet. That's normal, so work on one folder at a time.
 
+## Demo: what "compiled" means
+
+[`demo/hello`](demo/hello) is a tiny standalone program, not an exercise. Build it and
+run it to see how Go turns your code into one ready-to-run file:
+
+```sh
+cd demo/hello
+go build -o hello && ./hello
+```
+
+Its [README](demo/hello/README.md) explains the difference between Ruby (interpreted)
+and Go (compiled) in plain English.
+
 ## Learning path
 
 The folders are numbered in learning order (`01-basics` → `39-randomness`), so work
